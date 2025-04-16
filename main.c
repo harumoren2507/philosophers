@@ -1,3 +1,20 @@
+#include <stdlib.h>
+#include <pthread.h>
+
+typedef struct s_philosopher
+{
+    int last_meal_time;
+    int number_of_meal;
+    pthread_t thread;
+}t_philopher;
+typedef struct s_shared_data
+{
+    int number_philo;
+    int time_to_die;
+    int time_to_eat;
+    int time_to_sleep;
+
+}t_shared_data;
 
 
 typedef enum {
@@ -7,7 +24,21 @@ typedef enum {
     DEAD,
 } t_state;
 
-//void    philosophers(int    number_philo, )
+void    *philosopher_routine(void   *arg)
+{
+    t_philopher *philo;
+
+    philo = (t_philopher *)arg;
+    while (/*!check_death(philo)*/)
+    {
+        //think(philo);
+        //take_fork(philo);
+        //eat(philo);
+        //put_fork(philo);
+        //sleep(philo);
+    }
+    return (NULL);
+}
 
 #include <stdlib.h>
 #include <stdio.h>
