@@ -1,6 +1,9 @@
 #ifndef PHILO_H
 # define PHILO_H
 
+#include <pthread.h>
+#include <stdio.h>
+
 typedef struct s_philosopher {
   int id;
   int left_fork;
@@ -12,6 +15,9 @@ typedef struct s_philosopher {
   pthread_t thread;
 } t_philosopher;
 
+typedef struct s_fork {
+  pthread_mutex_t mutex;
+} t_fork;
 
 typedef struct s_data {
   int n_philosopher;//哲学者の数
