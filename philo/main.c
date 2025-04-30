@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <pthread.h>
 
-
-
 /*個々の哲学者を管理する構造体*/
 typedef struct s_philosopher {
   int id;
