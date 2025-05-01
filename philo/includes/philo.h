@@ -20,7 +20,7 @@ typedef struct s_fork {
 } t_fork;
 
 typedef struct s_data {
-  int n_philosopher;//哲学者の数
+  int n_philosophers;//哲学者の数
   int time_to_die;//死亡までの時間(ミリ秒)
   int time_to_eat;//食事にかかる時間(ミリ秒)
   int time_to_sleep;//睡眠にかかる時間(ミリ秒)
@@ -28,7 +28,7 @@ typedef struct s_data {
   int simulation_end; //シュミレーション終了フラグ　フラグならboolの方が分かりやすくね？
   long  long  start_time;//シュミレーション
   t_fork *forks; //フォークの配列
-  t_philosopher *philosophers;//哲学者の配列　　なぜダブルポインタで持たないのか
+  t_philosopher *philosophers;//哲学者の配列
   pthread_mutex_t print_mutex;//出力を保護するミューテックス
   pthread_mutex_t end_mutex;//終了フラグを保護するミューテックス
   pthread_mutex_t meal_check_mutex;//食事回数チェックを保護するミューテックス
