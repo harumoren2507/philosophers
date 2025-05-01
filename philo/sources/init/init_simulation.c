@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-include "includes/philo.h"
+#include "../../includes/philo.h"
 
 int allocate_resources(t_data *data)
 {
     data->forks = malloc(sizeof(t_fork) * data->n_philosophers);
     if (!data->forks)
         return (1);
-    data->philosophers = malloc(sizeof(t_philosophers) * data->n_philosophers);
+    data->philosophers = malloc(sizeof(t_philosopher) * data->n_philosophers);
     if (!data->philosophers)
     {
       free(data->philosophers);  
