@@ -19,7 +19,10 @@ int allocate_resources(t_data *data)
         return (1);
     data->philosophers = malloc(sizeof(t_philosophers) * data->n_philosophers);
     if (!data->philosophers)
-        return (1);//ここってfreeする必要ある？
+    {
+      free(data->philosophers);  
+      return (1);//ここってfreeする必要ある？
+    }
     pthread_mutex_init(&data->print_mutex, NULL);
     pthread_mutex_init(&data->end_mutex, NULL);
     pthread_mutex_init(&data->meal_check_mutex, NULL);
