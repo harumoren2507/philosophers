@@ -353,7 +353,9 @@ void death_monitor_loop(t_data *data)
             pthread_mutex_lock(&data->end_mutex);
             data->simulation_end = 1;
             pthread_mutex_unlock(&data->end_mutex);
+            pthread_mutex_lock(&data->print_mutex);
             printf("All philosophers have eaten enough.\n");
+            pthread_mutex_unlock(&data->print_mutex);
             break;
         }
         usleep(1000);
