@@ -54,79 +54,34 @@ void cleanup_resources(t_data *data);
 void sem_custom_init(t_semaphore *sem, int initial_value)
 {
     pthread_mutex_init(&sem->mutex, NULL);
-    pthread_mutex_init(&sem->block, NULL);
     sem->value = initial_value;
-
-    // 初期値が0以下ならブロック用ミューテックスをロック
-    if (initial_value <= 0)
-        pthread_mutex_lock(&sem->block);
 }
 
-/* セマフォの破棄の修正版 */
 void sem_custom_destroy(t_semaphore *sem)
 {
-    int ret;
-    
-    // 念のため内部ミューテックスから解放
-    pthread_mutex_lock(&sem->mutex);
-    pthread_mutex_unlock(&sem->mutex);
-    
-    // ブロックミューテックスの状態を確認
-    ret = pthread_mutex_trylock(&sem->block);
-    if (ret == 0) // ロック取得できた = ロックされていない
-    {
-        pthread_mutex_unlock(&sem->block);
-    }
-    else if (ret == EBUSY) // すでにロックされている
-    {
-        pthread_mutex_unlock(&sem->block); // 強制解除
-    }
-    
-    pthread_mutex_destroy(&sem->block);
     pthread_mutex_destroy(&sem->mutex);
 }
 
-/* セマフォのwait操作 */
 void sem_custom_wait(t_semaphore *sem)
 {
-    pthread_mutex_lock(&sem->mutex);
-    sem->value--;
-
-    if (sem->value < 0)
+    while (1)
     {
-        // リソースが不足しているのでブロック
+        pthread_mutex_lock(&sem->mutex);
+        if (sem->value > 0)
+        {
+            sem->value--;
+            pthread_mutex_unlock(&sem->mutex);
+            return;
+        }
         pthread_mutex_unlock(&sem->mutex);
-        pthread_mutex_lock(&sem->block); // ここでブロック
-        pthread_mutex_unlock(&sem->block); // 解放されたらすぐ解放
-    }
-    else
-    {
-        pthread_mutex_unlock(&sem->mutex);
+        usleep(1000);
     }
 }
 
-/* セマフォのpost操作 */
 void sem_custom_post(t_semaphore *sem)
 {
-    int ret;
-    
     pthread_mutex_lock(&sem->mutex);
     sem->value++;
-
-    if (sem->value <= 0)
-    {
-        // ブロックミューテックスの状態を確認してからアンロック
-        ret = pthread_mutex_trylock(&sem->block);
-        if (ret == EBUSY) // すでにロックされている場合だけアンロック
-        {
-            pthread_mutex_unlock(&sem->block);
-        }
-        else if (ret == 0) // ロックが取得できた場合は単にアンロック
-        {
-            pthread_mutex_unlock(&sem->block);
-        }
-    }
-    
     pthread_mutex_unlock(&sem->mutex);
 }
 
@@ -316,10 +271,13 @@ void *philosopher_routine(void *arg)
     if (data->n_philosophers == 1)
         return single_philosopher_routine(philo);
 
+    if (philo->id % 2 == 0)
+        usleep(5000);
     // 奇数番号の哲学者は少し遅らせてスタート（デッドロック防止の一助）
+    /*
     if (philo->id % 2 != 0)
         precise_sleep(data->time_to_eat / 2);
-
+    */
     // メインループ
     while (!simulation_is_over(data))
     {
@@ -378,6 +336,7 @@ void death_monitor_loop(t_data *data)
 {
     int i;
     
+    usleep(5000);
     while (!simulation_is_over(data))
     {
         i = 0;
@@ -397,7 +356,7 @@ void death_monitor_loop(t_data *data)
             printf("All philosophers have eaten enough.\n");
             break;
         }
-        usleep(500);
+        usleep(1000);
     }
 }
 
@@ -444,6 +403,9 @@ int init_simulation(t_data *data, int argc, char **argv)
 int allocate_resources(t_data *data)
 {
     // フォークの割り当て
+    int max_diners;
+
+    max_diners = data->n_philosophers -1;
     data->forks = malloc(sizeof(t_fork) * data->n_philosophers);
     if (!data->forks)
         return 1;
@@ -461,8 +423,10 @@ int allocate_resources(t_data *data)
     pthread_mutex_init(&data->end_mutex, NULL);
     pthread_mutex_init(&data->meal_check_mutex, NULL);
 
+    if (max_diners < 1)
+        max_diners = 1;
     // カスタムセマフォの初期化（最大N-1人が同時に食事可能）
-    sem_custom_init(&data->max_diners, data->n_philosophers - 1);
+    sem_custom_init(&data->max_diners, max_diners);
 
     return 0;
 }
@@ -492,7 +456,7 @@ void init_philosophers(t_data *data)
         data->philosophers[i].left_fork = i;
         data->philosophers[i].right_fork = (i + 1) % data->n_philosophers;
         data->philosophers[i].eating_count = 0;
-        data->philosophers[i].last_meal_time = get_time_ms();
+        //data->philosophers[i].last_meal_time = get_time_ms();
         data->philosophers[i].data = data;
         pthread_mutex_init(&data->philosophers[i].meal_mutex, NULL);
         i++;
@@ -560,6 +524,15 @@ int create_philosopher_threads(t_data *data)
 {
     int i = 0;
     
+    data->start_time = get_time_ms() + 10;
+    while (i < data->n_philosophers)
+    {
+        pthread_mutex_lock(&data->philosophers[i].meal_mutex);
+        data->philosophers[i].last_meal_time = data->start_time;
+        pthread_mutex_unlock(&data->philosophers[i].meal_mutex);
+        i++;
+    }
+    i = 0;
     while (i < data->n_philosophers)
     {
         if (pthread_create(&data->philosophers[i].thread, NULL,
@@ -592,12 +565,12 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // フォークと哲学者の初期化
+    // フォークと哲学者の初期化sem_custom_init
     init_forks(&data);
     init_philosophers(&data);
 
     // シミュレーション開始時刻を記録
-    data.start_time = get_time_ms();
+    //data.start_time = get_time_ms();
 
     // 哲学者スレッドの作成
     if (create_philosopher_threads(&data))
