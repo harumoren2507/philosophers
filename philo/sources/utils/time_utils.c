@@ -1,30 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_philosophers.c                                :+:      :+:    :+:   */
+/*   time_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: retoriya <retoriya@student.42tokyo.jp      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/05 15:22:55 by retoriya          #+#    #+#             */
-/*   Updated: 2025/05/05 15:22:57 by retoriya         ###   ########.fr       */
+/*   Created: 2025/05/05 15:24:05 by retoriya          #+#    #+#             */
+/*   Updated: 2025/05/05 15:24:07 by retoriya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/philo.h"
+#include "philo.h"
 
-void	init_philosophers(t_data *data)
+long long	get_time_ms(void)
 {
-	int	i;
+	struct timeval	tv;
 
-	i = 0;
-	while (i < data->n_philosophers)
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+/* 指定されたミリ秒だけ高精度に待機 */
+void	precise_sleep(int ms)
+{
+	long long	start;
+	long long	current;
+
+	start = get_time_ms();
+	while (1)
 	{
-		data->philosophers[i].id = i + 1;
-		data->philosophers[i].right_fork = i;
-		data->philosophers[i].left_fork = (i + 1) % data->n_philosophers;
-		data->philosophers[i].eating_count = 0;
-		data->philosophers[i].data = data;
-		pthread_mutex_init(&data->philosophers[i].meal_mutex, NULL);
-		i++;
+		current = get_time_ms();
+		if (current - start >= ms)
+			break ;
+		usleep(100);
 	}
 }

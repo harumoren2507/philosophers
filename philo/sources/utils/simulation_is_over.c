@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_forks.c                                       :+:      :+:    :+:   */
+/*   simulation_is_over.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: retoriya <retoriya@student.42tokyo.jp      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/05 15:22:45 by retoriya          #+#    #+#             */
-/*   Updated: 2025/05/05 15:22:47 by retoriya         ###   ########.fr       */
+/*   Created: 2025/05/05 15:23:54 by retoriya          #+#    #+#             */
+/*   Updated: 2025/05/05 15:23:55 by retoriya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/philo.h"
+#include "philo.h"
 
-void	init_forks(t_data *data)
+int	simulation_is_over(t_data *data)
 {
-	int	i;
+	int	result;
 
-	i = 0;
-	while (i < data->n_philosophers)
-	{
-		pthread_mutex_init(&data->forks[i].mutex, NULL);
-		i++;
-	}
+	pthread_mutex_lock(&data->end_mutex);
+	result = data->simulation_end;
+	pthread_mutex_unlock(&data->end_mutex);
+	return (result);
 }
