@@ -19,26 +19,17 @@ int	main(int argc, char **argv)
 
 	if (argc != 5 && argc != 6)
 	{
-		printf("Usage:%s number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n",
-			argv[0]);
+		printf("Usage: %s <philos> <die> <eat> <sleep> [meals]\n", argv[0]);
 		return (1);
 	}
-	if (init_simulation(&data, argc, argv))
+	if (init_simulation(&data, argc, argv) || init_components(&data))
 	{
 		printf("Error: invalid arguments or initialization failed\n");
 		return (1);
 	}
-	init_forks(&data);
-	init_philosophers(&data);
-	if (create_philosopher_threads(&data))
+	if (start_simulation(&data, &monitor_thread))
 	{
-		printf("Error: thread creation failed\n");
-		return (1);
-	}
-	if (pthread_create(&monitor_thread, NULL, death_monitor, &data))
-	{
-		printf("Error: monitor thread creation failed\n");
-		return (1);
+		printf("Error: simulation start failed\n");
 	}
 	pthread_join(monitor_thread, NULL);
 	end_simulation(&data);

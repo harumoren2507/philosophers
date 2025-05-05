@@ -32,6 +32,6 @@ void	precise_sleep(int ms)
 		current = get_time_ms();
 		if (current - start >= ms)
 			break ;
-		usleep(100); // 短い間隔でチェック（高負荷を避けるため100μs）
+		usleep(100);
 	}
 }

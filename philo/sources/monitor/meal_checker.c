@@ -20,7 +20,7 @@ int	all_ate_enough(t_data *data)
 
 	result = 1;
 	if (data->n_must_eat < 0)
-		return (0); // 無限に食べ続ける設定の場合
+		return (0);
 	pthread_mutex_lock(&data->meal_check_mutex);
 	i = 0;
 	while (i < data->n_philosophers)

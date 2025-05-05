@@ -41,7 +41,6 @@ void	*single_philosopher_routine(t_philosopher *philo)
 	print_status(philo, "is thinking");
 	pthread_mutex_lock(&data->forks[philo->left_fork].mutex);
 	print_status(philo, "has taken a fork");
-	// 2本目のフォークが取れないので待機するだけ（死亡するまで）
 	while (!simulation_is_over(data))
 		precise_sleep(1);
 	pthread_mutex_unlock(&data->forks[philo->left_fork].mutex);

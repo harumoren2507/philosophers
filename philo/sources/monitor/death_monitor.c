@@ -20,7 +20,6 @@ int	check_philosopher_death(t_data *data, int i)
 
 	current_time = get_time_ms();
 	last_meal = get_last_meal_time(&data->philosophers[i]);
-	// 最後の食事から time_to_die ミリ秒経過したかチェック
 	if (current_time - last_meal > data->time_to_die)
 	{
 		print_status(&data->philosophers[i], "died");
@@ -47,7 +46,6 @@ void	death_monitor_loop(t_data *data)
 				break ;
 			i++;
 		}
-		// 全員が必要回数食事したかチェック
 		if (all_ate_enough(data) && !simulation_is_over(data))
 		{
 			pthread_mutex_lock(&data->end_mutex);
@@ -68,7 +66,6 @@ void	*death_monitor(void *arg)
 	t_data	*data;
 
 	data = (t_data *)arg;
-	// 少し待機してから開始（哲学者スレッドが始まるのを待つ）
 	precise_sleep(1);
 	death_monitor_loop(data);
 	return (NULL);

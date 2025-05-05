@@ -17,7 +17,6 @@ void	cleanup_resources(t_data *data)
 {
 	int	i;
 
-	// 各哲学者のミューテックスを解放
 	i = 0;
 	while (i < data->n_philosophers)
 	{
@@ -25,10 +24,8 @@ void	cleanup_resources(t_data *data)
 		pthread_mutex_destroy(&data->philosophers[i].meal_mutex);
 		i++;
 	}
-	// 共有ミューテックスを解放
 	pthread_mutex_destroy(&data->print_mutex);
 	pthread_mutex_destroy(&data->end_mutex);
 	pthread_mutex_destroy(&data->meal_check_mutex);
-	// 最後にセマフォを破棄
 	sem_custom_destroy(&data->max_diners);
 }

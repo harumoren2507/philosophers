@@ -18,7 +18,6 @@ void	take_forks(t_philosopher *philo)
 	t_data	*data;
 
 	data = philo->data;
-	// 奇数と偶数でフォークを取る順番を変える（デッドロック防止）
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&data->forks[philo->left_fork].mutex);

@@ -35,19 +35,12 @@ void	philosopher_cycle(t_philosopher *philo)
 	t_data	*data;
 
 	data = philo->data;
-	// 思考
 	print_status(philo, "is thinking");
-	// 同時に食事できる哲学者数を制限（セマフォを使用）
 	sem_custom_wait(&data->max_diners);
-	// フォークの取得
 	take_forks(philo);
-	// 食事
 	eat(philo);
-	// フォークを解放
 	put_forks(philo);
-	// セマフォを解放（他の哲学者が食事できるように）
 	sem_custom_post(&data->max_diners);
-	// 睡眠（シミュレーション終了チェック付き）
 	if (!simulation_is_over(data))
 	{
 		print_status(philo, "is sleeping");
