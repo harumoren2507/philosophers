@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/philo.h"
+#include "philo.h"
 
 void	init_philosophers(t_data *data)
 {
