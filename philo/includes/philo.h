@@ -1,37 +1,96 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <pthread.h>
-#include <stdio.h>
+# include <errno.h>
+# include <pthread.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <sys/time.h>
+# include <unistd.h>
 
-typedef struct s_philosopher {
-  int id;
-  int left_fork;
-  int right_fork;
-  int eating_count;
-  long  long  last_meal_time;//なぜlong long?
-  pthread_mutex_t meal_mutex;
-  struct  s_data *data;
-  pthread_t thread;
-} t_philosopher;
+/* カスタムセマフォの構造体 */
+typedef struct s_semaphore
+{
+	pthread_mutex_t mutex; // 内部状態を保護するミューテックス
+	pthread_mutex_t block; // スレッドをブロックするためのミューテックス
+	int value;             // セマフォの値（利用可能なリソース数）
+}					t_semaphore;
 
-typedef struct s_fork {
-  pthread_mutex_t mutex;
-} t_fork;
+typedef struct s_philosopher
+{
+	int				id;
+	int				left_fork;
+	int				right_fork;
+	int				eating_count;
+	long long		last_meal_time;
+	pthread_mutex_t	meal_mutex;
+	struct s_data	*data;
+	pthread_t		thread;
+}					t_philosopher;
 
-typedef struct s_data {
-  int n_philosophers;//哲学者の数
-  int time_to_die;//死亡までの時間(ミリ秒)
-  int time_to_eat;//食事にかかる時間(ミリ秒)
-  int time_to_sleep;//睡眠にかかる時間(ミリ秒)
-  int n_must_eat;//各哲学者が食べなければならない回数
-  int simulation_end; //シュミレーション終了フラグ　フラグならboolの方が分かりやすくね？
-  long  long  start_time;//シュミレーション
-  t_fork *forks; //フォークの配列
-  t_philosopher *philosophers;//哲学者の配列
-  pthread_mutex_t print_mutex;//出力を保護するミューテックス
-  pthread_mutex_t end_mutex;//終了フラグを保護するミューテックス
-  pthread_mutex_t meal_check_mutex;//食事回数チェックを保護するミューテックス
-} t_data;
+typedef struct s_fork
+{
+	pthread_mutex_t	mutex;
+}					t_fork;
 
+/* 共有データを管理する構造体 */
+typedef struct s_data
+{
+	int n_philosophers;               // 哲学者の数
+	int time_to_die;                  // 死亡までの時間（ミリ秒）
+	int time_to_eat;                  // 食事にかかる時間（ミリ秒）
+	int time_to_sleep;                // 睡眠にかかる時間（ミリ秒）
+	int n_must_eat;                   // 各哲学者が食べなければならない回数（オプション）
+	int simulation_end;               // シミュレーション終了フラグ
+	long long start_time;             // シミュレーション開始時刻
+	t_fork *forks;                    // フォークの配列
+	t_philosopher *philosophers;      // 哲学者の配列
+	pthread_mutex_t print_mutex;      // 出力を保護するミューテックス
+	pthread_mutex_t end_mutex;        // 終了フラグを保護するミューテックス
+	pthread_mutex_t meal_check_mutex; // 食事回数チェックを保護するミューテックス
+	t_semaphore max_diners;           // 同時に食事できる哲学者の数を制限するセマフォ
+}					t_data;
+
+int					ft_atoi(const char *str);
+void				*ft_memset(void *s, int c, size_t n);
+
+//初期化関連
+int					init_simulation(t_data *data, int argc, char **argv);
+void				*ft_memset(void *s, int c, size_t n);
+void				init_philosophers(t_data *data);
+void				init_forks(t_data *data);
+int					allocate_resources(t_data *data);
+int					create_philosopher_threads(t_data *data);
+
+void				*philosopher_routine(void *arg);
+void				*single_philosopher_routine(t_philosopher *philo);
+
+void				sem_custom_wait(t_semaphore *sem);
+void				sem_custom_post(t_semaphore *sem);
+void				sem_custom_init(t_semaphore *sem, int initial_value);
+void				sem_custom_destroy(t_semaphore *sem);
+
+void				take_forks(t_philosopher *philo);
+void				put_forks(t_philosopher *philo);
+
+void				eat(t_philosopher *philo);
+void				philosopher_cycle(t_philosopher *philo);
+void				update_last_meal_time(t_philosopher *philo);
+long long			get_last_meal_time(t_philosopher *philo);
+
+void				*death_monitor(void *arg);
+void				death_monitor_loop(t_data *data);
+int					check_philosopher_death(t_data *data, int i);
+
+void				end_simulation(t_data *data);
+void				cleanup_resources(t_data *data);
+
+void				precise_sleep(int ms);
+long long			get_time_ms(void);
+
+void				print_status(t_philosopher *philo, char *message);
+int					simulation_is_over(t_data *data);
+
+int					all_ate_enough(t_data *data);
 #endif
