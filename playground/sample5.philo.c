@@ -529,9 +529,9 @@ int create_philosopher_threads(t_data *data)
     data->start_time = get_time_ms() + 10;
     while (i < data->n_philosophers)
     {
-        pthread_mutex_lock(&data->philosophers[i].meal_mutex);
+        //read_mutex_lock(&data->philosophers[i].meal_mutex);
         data->philosophers[i].last_meal_time = data->start_time;
-        pthread_mutex_unlock(&data->philosophers[i].meal_mutex);
+        //hread_mutex_unlock(&data->philosophers[i].meal_mutex);
         i++;
     }
     i = 0;
