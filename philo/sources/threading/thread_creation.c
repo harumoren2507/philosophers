@@ -6,7 +6,7 @@
 /*   By: retoriya <retoriya@student.42tokyo.jp      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:23:33 by retoriya          #+#    #+#             */
-/*   Updated: 2025/05/05 15:23:38 by retoriya         ###   ########.fr       */
+/*   Updated: 2025/05/11 17:52:43 by retoriya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	create_philosopher_threads(t_data *data)
 
 	i = 0;
 	j = 0;
-	data->start_time = get_time_ms() + 10;
+	data->start_time = get_time_ms() + 5;
 	while (i < data->n_philosophers)
 	{
 		data->philosophers[i].last_meal_time = data->start_time;
