@@ -47,9 +47,9 @@ int	init_simulation(t_data *data, int argc, char **argv)
 		data->n_must_eat = ft_atoi(argv[5]);
 	else
 		data->n_must_eat = -1;
-	if (data->n_philosophers > 300 || data->n_philosophers <= 0 || data->time_to_die < 60
-		|| data->time_to_eat < 60 || data->time_to_sleep < 60 || (argc == 6
-			&& data->n_must_eat <= 0))
+	if (data->n_philosophers > 300 || data->n_philosophers <= 0
+		|| data->time_to_die < 60 || data->time_to_eat < 60
+		|| data->time_to_sleep < 60 || (argc == 6 && data->n_must_eat <= 0))
 		return (1);
 	return (allocate_resources(data));
 }
