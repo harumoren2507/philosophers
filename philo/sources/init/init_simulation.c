@@ -6,7 +6,7 @@
 /*   By: retoriya <retoriya@student.42tokyo.jp      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 17:34:21 by retoriya          #+#    #+#             */
-/*   Updated: 2025/04/30 19:40:51 by retoriya         ###   ########.fr       */
+/*   Updated: 2025/05/11 14:59:27 by retoriya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	init_simulation(t_data *data, int argc, char **argv)
 		data->n_must_eat = ft_atoi(argv[5]);
 	else
 		data->n_must_eat = -1;
-	if (data->n_philosophers <= 0 || data->time_to_die < 60
+	if (data->n_philosophers > 300 || data->n_philosophers <= 0 || data->time_to_die < 60
 		|| data->time_to_eat < 60 || data->time_to_sleep < 60 || (argc == 6
 			&& data->n_must_eat <= 0))
 		return (1);
