@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-/* 食事を行う関数 */
 void	eat(t_philosopher *philo)
 {
 	t_data	*data;
@@ -29,7 +28,6 @@ void	eat(t_philosopher *philo)
 	}
 }
 
-/* 哲学者のメインサイクル関数 */
 void	philosopher_cycle(t_philosopher *philo)
 {
 	t_data	*data;
@@ -48,7 +46,6 @@ void	philosopher_cycle(t_philosopher *philo)
 	}
 }
 
-/* 哲学者の最後の食事時間を更新*/
 void	update_last_meal_time(t_philosopher *philo)
 {
 	pthread_mutex_lock(&philo->meal_mutex);
@@ -56,7 +53,6 @@ void	update_last_meal_time(t_philosopher *philo)
 	pthread_mutex_unlock(&philo->meal_mutex);
 }
 
-/* 哲学者の最後の食事時間を取得 */
 long long	get_last_meal_time(t_philosopher *philo)
 {
 	long long	time;

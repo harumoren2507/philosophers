@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-/* シミュレーションの終了処理の修正版 */
 void	end_simulation(t_data *data)
 {
 	int	i;

@@ -54,7 +54,6 @@ int	init_simulation(t_data *data, int argc, char **argv)
 	return (allocate_resources(data));
 }
 
-/* init_components: フォークと哲学者の初期化を行う */
 int	init_components(t_data *data)
 {
 	init_forks(data);

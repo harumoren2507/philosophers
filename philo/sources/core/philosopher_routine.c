@@ -6,7 +6,7 @@
 /*   By: retoriya <retoriya@student.42tokyo.jp      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 15:25:13 by retoriya          #+#    #+#             */
-/*   Updated: 2025/05/05 15:25:15 by retoriya         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:08:20 by retoriya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ void	*philosopher_routine(void *arg)
 	return (NULL);
 }
 
-/* 1人の哲学者の場合の特別処理 */
 void	*single_philosopher_routine(t_philosopher *philo)
 {
 	t_data	*data;
 
 	data = philo->data;
+	usleep(5000);
 	print_status(philo, "is thinking");
 	pthread_mutex_lock(&data->forks[philo->left_fork].mutex);
 	print_status(philo, "has taken a fork");

@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-/* セマフォの初期化 */
 void	sem_custom_init(t_semaphore *sem, int initial_value)
 {
 	pthread_mutex_init(&sem->mutex, NULL);

@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-/* 全ての哲学者が十分に食事したかチェック */
 int	all_ate_enough(t_data *data)
 {
 	int	i;
