@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-/* リソースのクリーンアップの修正版 */
 void	cleanup_resources(t_data *data)
 {
 	int	i;

@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-/* 死亡したフィロソファーをチェック */
 int	check_philosopher_death(t_data *data, int i)
 {
 	long long	current_time;
@@ -31,7 +30,6 @@ int	check_philosopher_death(t_data *data, int i)
 	return (0);
 }
 
-/* 哲学者の死亡監視のループ処理の修正版 */
 void	death_monitor_loop(t_data *data)
 {
 	int	i;
@@ -60,7 +58,6 @@ void	death_monitor_loop(t_data *data)
 	}
 }
 
-/* 哲学者の死亡監視 */
 void	*death_monitor(void *arg)
 {
 	t_data	*data;

@@ -37,6 +37,7 @@ void	*single_philosopher_routine(t_philosopher *philo)
 	t_data	*data;
 
 	data = philo->data;
+	usleep(5000);
 	print_status(philo, "is thinking");
 	pthread_mutex_lock(&data->forks[philo->left_fork].mutex);
 	print_status(philo, "has taken a fork");
